@@ -14,6 +14,16 @@ const getTodoListsOptions = {
   url: 'http://localhost:3001/getTodoLists'
 }
 
+const saveTodosOptions = (id, todos) => {
+  return {
+    url: 'http://localhost:3001/saveTodos',
+    form: {
+      id: id,
+      todos: JSON.stringify(todos)
+    }
+  }
+}
+
 const getPersonalTodos = () => {
   return new Promise(resolve => {
     request.get(getTodoListsOptions, (err, res, body) => {
@@ -67,6 +77,11 @@ export const ToDoLists = ({ style }) => {
         setToDoLists({
           ...toDoLists,
           [id]: { ...listToUpdate, todos }
+        })
+        request.post(saveTodosOptions(id, todos), (err, res, body) => {
+          if (err)
+            return console.log ('Save failed, error: ', err)
+          console.log ('Save successful, server responded with: ', body)
         })
       }}
     />}
