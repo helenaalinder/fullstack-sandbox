@@ -32,3 +32,11 @@ app.get('/getTodoLists', (req, res) => {
   allowLocalhostOrigin(res)
   res.json (todoLists)
 })
+
+app.post('/saveTodos', (req, res) => {
+  const id = req.body.id
+  const todosToSave = JSON.parse(req.body.todos)
+  todoLists[id].todos = todosToSave
+  allowLocalhostOrigin (res)
+  res.sendStatus (201)
+})
