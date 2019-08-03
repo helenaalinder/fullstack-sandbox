@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { TextField } from '../../shared/FormFields'
 
 const useStyles = makeStyles({
@@ -46,18 +48,33 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
           {toDoList.title}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form}>
-          {todos.map((name, index) => (
+          {todos.map((todoInfo, index) => (
             <div key={index} className={classes.todoLine}>
               <Typography className={classes.standardSpace} variant='title'>
                 {index + 1}
               </Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={todoInfo.done}
+                    color='primary'
+                    onChange={() => {
+                      setTodos([ // immutable update
+                        ...todos.slice(0, index),
+                        {title: todos[index].title, done: !todos[index].done},
+                        ...todos.slice(index + 1)
+                      ])
+                    }}
+                  />
+                }
+              />
               <TextField
                 label='What to do?'
-                value={name}
+                value={todoInfo.title}
                 onChange={event => {
                   setTodos([ // immutable update
                     ...todos.slice(0, index),
-                    event.target.value,
+                    {title: event.target.value, done: todos[index].done},
                     ...todos.slice(index + 1)
                   ])
                 }}
@@ -83,7 +100,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, ''])
+                setTodos([...todos, {title: '', done: false}])
               }}
             >
               Add Todo <AddIcon />

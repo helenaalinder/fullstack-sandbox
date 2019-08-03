@@ -29,9 +29,9 @@ const getPersonalTodos = () => {
     request.get(getTodoListsOptions, (err, res, body) => {
       if (err) {
         console.log('Fetch failed, error: ', err)
-        resolve ({})
+        resolve({})
       }
-      resolve (JSON.parse(body))
+      resolve(JSON.parse(body))
     })
   })
 }
