@@ -8,7 +8,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import Typography from '@material-ui/core/Typography'
 import { ToDoListForm } from './ToDoListForm'
+import Checkcircle from '@material-ui/icons/CheckCircle'
 import request from 'request'
+import { allTodosDone } from '../../shared/TodoListUtils'
 
 const getTodoListsOptions = {
   url: 'http://localhost:3001/getTodoLists'
@@ -65,6 +67,7 @@ export const ToDoLists = ({ style }) => {
               <ReceiptIcon />
             </ListItemIcon>
             <ListItemText primary={toDoLists[key].title} />
+            {allTodosDone (toDoLists[key].todos) ? <Checkcircle color='primary'/> : ''}
           </ListItem>)}
         </List>
       </CardContent>

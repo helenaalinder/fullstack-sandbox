@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
+import { blue } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
@@ -10,6 +11,7 @@ import Typography from '@material-ui/core/Typography'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { TextField } from '../../shared/FormFields'
+import { allTodosDone } from '../../shared/TodoListUtils'
 
 const useStyles = makeStyles({
   card: {
@@ -32,8 +34,16 @@ const useStyles = makeStyles({
   }
 })
 
+const todosDoneStyle = makeStyles({
+  card: {
+    margin: '1rem',
+    backgroundColor: blue[100]
+  }
+})
+
 export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   const classes = useStyles()
+  const done = todosDoneStyle()
   const [todos, setTodos] = useState(toDoList.todos)
 
   const handleSubmit = event => {
@@ -41,11 +51,13 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
     saveToDoList(toDoList.id, { todos })
   }
 
+  const allDone = allTodosDone(toDoList.todos)
+
   return (
-    <Card className={classes.card}>
+    <Card className={allDone ? done.card : classes.card}>
       <CardContent>
         <Typography variant='headline' component='h2'>
-          {toDoList.title}
+          {toDoList.title}{allDone ? ', all done!' : ''}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form}>
           {todos.map((todoInfo, index) => (
