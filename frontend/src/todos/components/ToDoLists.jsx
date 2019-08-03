@@ -8,22 +8,22 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import Typography from '@material-ui/core/Typography'
 import { ToDoListForm } from './ToDoListForm'
+import request from 'request'
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+const getTodoListsOptions = {
+  url: 'http://localhost:3001/getTodoLists'
+}
 
 const getPersonalTodos = () => {
-  return sleep(1000).then(() => Promise.resolve({
-    '0000000001': {
-      id: '0000000001',
-      title: 'First List',
-      todos: ['First todo of first list!']
-    },
-    '0000000002': {
-      id: '0000000002',
-      title: 'Second List',
-      todos: ['First todo of second list!']
-    }
-  }))
+  return new Promise(resolve => {
+    request.get(getTodoListsOptions, (err, res, body) => {
+      if (err) {
+        console.log('Fetch failed, error: ', err)
+        resolve ({})
+      }
+      resolve (JSON.parse(body))
+    })
+  })
 }
 
 export const ToDoLists = ({ style }) => {
