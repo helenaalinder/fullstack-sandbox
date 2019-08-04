@@ -8,7 +8,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import Typography from '@material-ui/core/Typography'
 import { ToDoListForm } from './ToDoListForm'
-import Checkcircle from '@material-ui/icons/CheckCircle'
+import { CheckCircle } from '../../shared/FormFieldsAndIcons'
 import request from 'request'
 import { allTodosDone } from '../../shared/TodoListUtils'
 
@@ -67,7 +67,7 @@ export const ToDoLists = ({ style }) => {
               <ReceiptIcon />
             </ListItemIcon>
             <ListItemText primary={toDoLists[key].title} />
-            {allTodosDone (toDoLists[key].todos) ? <Checkcircle color='primary'/> : ''}
+            {allTodosDone (toDoLists[key].todos) ? <CheckCircle/> : ''}
           </ListItem>)}
         </List>
       </CardContent>

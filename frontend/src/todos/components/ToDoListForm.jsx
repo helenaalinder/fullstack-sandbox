@@ -12,7 +12,9 @@ import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
 import Checkbox from '@material-ui/core/Checkbox'
 import TextFieldMaterialUi from '@material-ui/core/TextField'
-import { TextField } from '../../shared/FormFields'
+import { TextField } from '../../shared/FormFieldsAndIcons'
+import { CheckCircle } from '../../shared/FormFieldsAndIcons'
+import { CheckCircleOutline } from '../../shared/FormFieldsAndIcons'
 import { allTodosDone } from '../../shared/TodoListUtils'
 import { checkDueDate } from '../../shared/TodoListUtils'
 
@@ -23,7 +25,7 @@ const useStyles = makeStyles({
   },
   cardDone: {
     margin: '3rem',
-    backgroundColor: blue[100],
+    backgroundColor: blue[50],
     flexGrow: 2
   },
   todoLine: {
@@ -60,17 +62,15 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
     <Card className={allDone ? classes.cardDone : classes.card}>
       <CardContent>
         <Typography variant='headline' component='h2'>
-          {toDoList.title}{allDone ? ', all done!' : ''}
+          {toDoList.title}
         </Typography>
         <form className={classes.form}>
           {todos.map((todoInfo, index) => (
             <div key={index} className={classes.todoLine}>
-              <Typography className={classes.standardSpace} variant='title'>
-                {index + 1}
-              </Typography>
               <Checkbox
                 checked={todoInfo.done}
-                color='primary'
+                icon={<CheckCircleOutline/>}
+                checkedIcon={<CheckCircle/>}
                 onChange={() => {
                   const newTodos = [
                     ...todos.slice(0, index),
