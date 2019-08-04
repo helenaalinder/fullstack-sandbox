@@ -19,17 +19,20 @@ import { allTodosDone } from '../../shared/TodoListUtils'
 
 const useStyles = makeStyles({
   card: {
-    margin: '3rem',
-    flexGrow: 2
+    marginRight: '3rem',
+    marginLeft: '3rem',
+    width: '50rem'
   },
   cardDone: {
-    margin: '3rem',
+    marginRight: '3rem',
+    marginLeft: '3rem',
+    width: '50rem',
     backgroundColor: blue[50],
-    flexGrow: 2
   },
   todoLine: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: '1rem'
   },
   textField: {
     flexGrow: 1
@@ -84,7 +87,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   return (
     <Card className={allDone ? classes.cardDone : classes.card}>
       <CardContent>
-        <Typography variant='headline' component='h2'>
+        <Typography variant='h6'>
           {toDoList.title}
         </Typography>
         <form className={classes.form}>
@@ -94,6 +97,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 checked={todoInfo.done}
                 icon={<CheckCircleOutline/>}
                 checkedIcon={<CheckCircle/>}
+                color='primary'
                 onChange={() => {
                   const newTodos = [
                     ...todos.slice(0, index),
