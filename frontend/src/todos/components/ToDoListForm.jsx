@@ -11,7 +11,6 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
 import Checkbox from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import TextFieldMaterialUi from '@material-ui/core/TextField'
 import { TextField } from '../../shared/FormFields'
 import { allTodosDone } from '../../shared/TodoListUtils'
@@ -20,6 +19,10 @@ import { checkDueDate } from '../../shared/TodoListUtils'
 const useStyles = makeStyles({
   card: {
     margin: '1rem'
+  },
+  cardDone: {
+    margin: '1rem',
+    backgroundColor: blue[100]
   },
   todoLine: {
     display: 'flex',
@@ -44,16 +47,9 @@ const useStyles = makeStyles({
   }
 })
 
-const todosDoneStyle = makeStyles({
-  card: {
-    margin: '1rem',
-    backgroundColor: blue[100]
-  }
-})
-
 export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   const classes = useStyles()
-  const done = todosDoneStyle()
+
   const [todos, setTodos] = useState(toDoList.todos)
 
   const handleSubmit = event => {
@@ -64,7 +60,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   const allDone = allTodosDone(toDoList.todos)
 
   return (
-    <Card className={allDone ? done.card : classes.card}>
+    <Card className={allDone ? classes.cardDone : classes.card}>
       <CardContent>
         <Typography variant='headline' component='h2'>
           {toDoList.title}{allDone ? ', all done!' : ''}
@@ -75,21 +71,17 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               <Typography className={classes.standardSpace} variant='title'>
                 {index + 1}
               </Typography>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={todoInfo.done}
-                    color='primary'
-                    onChange={() => {
-                      setTodos([ // immutable update
-                        ...todos.slice(0, index),
-                        {title: todos[index].title, done: !todos[index].done,
-                          date: todos[index].date},
-                        ...todos.slice(index + 1)
-                      ])
-                    }}
-                  />
-                }
+              <Checkbox
+                checked={todoInfo.done}
+                color='primary'
+                onChange={() => {
+                  setTodos([ // immutable update
+                    ...todos.slice(0, index),
+                    {title: todos[index].title, done: !todos[index].done,
+                    date: todos[index].date},
+                    ...todos.slice(index + 1)
+                  ])
+                }}
               />
               <TextField
                 label='What to do?'
