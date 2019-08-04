@@ -52,11 +52,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
 
   const [todos, setTodos] = useState(toDoList.todos)
 
-  const handleSubmit = event => {
-    event.preventDefault()
-    saveToDoList(toDoList.id, { todos })
-  }
-
   const allDone = allTodosDone(toDoList.todos)
 
   return (
@@ -65,7 +60,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
         <Typography variant='headline' component='h2'>
           {toDoList.title}{allDone ? ', all done!' : ''}
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <form className={classes.form}>
           {todos.map((todoInfo, index) => (
             <div key={index} className={classes.todoLine}>
               <Typography className={classes.standardSpace} variant='title'>
@@ -75,24 +70,28 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 checked={todoInfo.done}
                 color='primary'
                 onChange={() => {
-                  setTodos([ // immutable update
+                  const newTodos = [
                     ...todos.slice(0, index),
-                    {title: todos[index].title, done: !todos[index].done,
+                    {title: todos[index].title, done: !todoInfo.done,
                     date: todos[index].date},
                     ...todos.slice(index + 1)
-                  ])
+                  ]
+                  setTodos(newTodos) // immutable update
+                  saveToDoList(toDoList.id, newTodos)
                 }}
               />
               <TextField
                 label='What to do?'
                 value={todoInfo.title}
                 onChange={event => {
-                  setTodos([ // immutable update
+                  const newTodos = [
                     ...todos.slice(0, index),
                     {title: event.target.value, done: todos[index].done,
                       date: todos[index].date},
                     ...todos.slice(index + 1)
-                  ])
+                  ]
+                  setTodos(newTodos) // immutable update
+                  saveToDoList(toDoList.id, newTodos)
                 }}
                 className={classes.textField}
               />
@@ -101,12 +100,14 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 type='date'
                 defaultValue={todoInfo.date}
                 onChange={event => {
-                  setTodos([
+                  const newTodos = [
                     ...todos.slice(0, index),
                     {title: todos[index].title, done: todos[index].done,
                       date: event.target.value},
                     ...todos.slice(index + 1)
-                  ])
+                  ]
+                  setTodos(newTodos) // immutable update
+                  saveToDoList(toDoList.id, newTodos)
                 }}
                 InputLabelProps={{
                   shrink: true
@@ -123,10 +124,12 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 color='secondary'
                 className={classes.standardSpace}
                 onClick={() => {
-                  setTodos([ // immutable delete
+                  const newTodos = [
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
-                  ])
+                  ]
+                  setTodos(newTodos) //immutable delete
+                  saveToDoList(toDoList.id, newTodos)
                 }}
               >
                 <DeleteIcon />
@@ -138,13 +141,12 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, {title: '', done: false, date: ''}])
+                const newTodos = [...todos, {title: '', done: false, date: ''}]
+                setTodos(newTodos) //immutable update
+                saveToDoList(toDoList.id, newTodos)
               }}
             >
               Add Todo <AddIcon />
-            </Button>
-            <Button type='submit' variant='contained' color='primary'>
-              Save
             </Button>
           </CardActions>
         </form>

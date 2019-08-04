@@ -75,7 +75,7 @@ export const ToDoLists = ({ style }) => {
     {toDoLists[activeList] && <ToDoListForm
       key={activeList} // use key to make React recreate component to reset internal state
       toDoList={toDoLists[activeList]}
-      saveToDoList={(id, { todos }) => {
+      saveToDoList={(id, todos) => {
         const listToUpdate = toDoLists[id]
         setToDoLists({
           ...toDoLists,
