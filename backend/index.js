@@ -24,19 +24,11 @@ let todoLists = {
   }
 }
 
-const allowLocalhostOrigin = (res) => {
-  res.setHeader ('Access-Control-Allow-Origin','http://localhost:3000')
-}
-
-app.get('/getTodoLists', (req, res) => {
-  allowLocalhostOrigin(res)
-  res.json (todoLists)
-})
+app.get('/getTodoLists', (req, res) => res.json (todoLists))
 
 app.post('/saveTodos', (req, res) => {
   const id = req.body.id
   const todosToSave = JSON.parse(req.body.todos)
   todoLists[id].todos = todosToSave
-  allowLocalhostOrigin (res)
   res.sendStatus (201)
 })

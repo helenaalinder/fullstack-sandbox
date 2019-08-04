@@ -9,33 +9,17 @@ import ReceiptIcon from '@material-ui/icons/Receipt'
 import Typography from '@material-ui/core/Typography'
 import { ToDoListForm } from './ToDoListForm'
 import { CheckCircle } from '../../shared/FormFieldsAndIcons'
-import request from 'request'
 import { allTodosDone } from '../../shared/TodoListUtils'
-
-const getTodoListsOptions = {
-  url: 'http://localhost:3001/getTodoLists'
-}
-
-const saveTodosOptions = (id, todos) => {
-  return {
-    url: 'http://localhost:3001/saveTodos',
-    form: {
-      id: id,
-      todos: JSON.stringify(todos)
-    }
-  }
-}
+import axios from 'axios'
 
 const getPersonalTodos = () => {
-  return new Promise(resolve => {
-    request.get(getTodoListsOptions, (err, res, body) => {
-      if (err) {
-        console.log('Fetch failed, error: ', err)
-        resolve({})
-      }
-      resolve(JSON.parse(body))
-    })
-  })
+  return fetch('/getTodoLists')
+          .then(response => {
+            return response.json()
+          })
+          .catch(err => {
+            console.log('Failed to fetch todo lists, err', err)
+          })
 }
 
 export const ToDoLists = ({ style }) => {
@@ -81,11 +65,17 @@ export const ToDoLists = ({ style }) => {
           ...toDoLists,
           [id]: { ...listToUpdate, todos }
         })
-        request.post(saveTodosOptions(id, todos), (err, res, body) => {
-          if (err)
+        const form = {
+          id: id,
+          todos: JSON.stringify(todos)
+        }
+        axios.post('/saveTodos', form)
+          .then(response => {
+            console.log ('Save successful, server responded with: ', response.data)
+          })
+          .catch(err => {
             return console.log ('Save failed, error: ', err)
-          console.log ('Save successful, server responded with: ', body)
-        })
+          })
       }}
     />}
   </Fragment>
