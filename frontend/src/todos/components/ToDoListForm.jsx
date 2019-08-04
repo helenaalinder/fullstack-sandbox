@@ -16,7 +16,6 @@ import { TextField } from '../../shared/FormFieldsAndIcons'
 import { CheckCircle } from '../../shared/FormFieldsAndIcons'
 import { CheckCircleOutline } from '../../shared/FormFieldsAndIcons'
 import { allTodosDone } from '../../shared/TodoListUtils'
-import { checkDueDate } from '../../shared/TodoListUtils'
 
 const useStyles = makeStyles({
   card: {
@@ -50,6 +49,30 @@ const useStyles = makeStyles({
     flexGrow: 1
   }
 })
+
+const getDueDateIndication = (todoInfo) => {
+  const daysLeft = checkDueDate(todoInfo.date)
+  if (todoInfo.done)
+    return 'Done'
+  if (daysLeft === 0) {
+    return 'Due today'
+  } else if (daysLeft < 0) {
+    if (daysLeft === -1)
+      return 'Was due ' + Math.abs(daysLeft) + ' day ago'
+    return 'Was due ' + Math.abs(daysLeft) + ' days ago'
+  } else if (daysLeft > 0) {
+    if (daysLeft === 1)
+      return 'Due in ' + daysLeft + ' day'
+    return 'Due in ' + daysLeft + ' days'
+  }
+  return 'Set due date:'
+}
+
+const checkDueDate = (date) => {
+  const currDate = new Date(date)
+  const today = new Date()
+  return currDate.getDate() - today.getDate()
+}
 
 export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   const classes = useStyles()
@@ -98,7 +121,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 className={classes.textField}
               />
               <TextFieldMaterialUi
-                label='Due date'
+                label={getDueDateIndication (todoInfo)}
                 type='date'
                 defaultValue={todoInfo.date}
                 onChange={event => {
@@ -113,12 +136,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 }}
                 InputLabelProps={{
                   shrink: true
-                }}
-                InputProps={{
-                  className: todoInfo.done !== true &&
-                              checkDueDate(todoInfo.date) > 0 ?
-                              (checkDueDate(todoInfo.date) > 1 ?
-                                classes.dateOverdue : classes.dateClose) : ''
                 }}
               />
               <Button
