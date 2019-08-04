@@ -18,11 +18,13 @@ import { checkDueDate } from '../../shared/TodoListUtils'
 
 const useStyles = makeStyles({
   card: {
-    margin: '1rem'
+    margin: '3rem',
+    flexGrow: 2
   },
   cardDone: {
-    margin: '1rem',
-    backgroundColor: blue[100]
+    margin: '3rem',
+    backgroundColor: blue[100],
+    flexGrow: 2
   },
   todoLine: {
     display: 'flex',
