@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { blue } from '@material-ui/core/colors';
+import { orange } from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
@@ -10,8 +12,10 @@ import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import TextFieldMaterialUi from '@material-ui/core/TextField'
 import { TextField } from '../../shared/FormFields'
 import { allTodosDone } from '../../shared/TodoListUtils'
+import { checkDueDate } from '../../shared/TodoListUtils'
 
 const useStyles = makeStyles({
   card: {
@@ -23,6 +27,12 @@ const useStyles = makeStyles({
   },
   textField: {
     flexGrow: 1
+  },
+  dateClose: {
+    backgroundColor: orange[100]
+  },
+  dateOverdue: {
+    backgroundColor: red[100]
   },
   standardSpace: {
     margin: '8px'
@@ -73,7 +83,8 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                     onChange={() => {
                       setTodos([ // immutable update
                         ...todos.slice(0, index),
-                        {title: todos[index].title, done: !todos[index].done},
+                        {title: todos[index].title, done: !todos[index].done,
+                          date: todos[index].date},
                         ...todos.slice(index + 1)
                       ])
                     }}
@@ -86,11 +97,34 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 onChange={event => {
                   setTodos([ // immutable update
                     ...todos.slice(0, index),
-                    {title: event.target.value, done: todos[index].done},
+                    {title: event.target.value, done: todos[index].done,
+                      date: todos[index].date},
                     ...todos.slice(index + 1)
                   ])
                 }}
                 className={classes.textField}
+              />
+              <TextFieldMaterialUi
+                label='Due date'
+                type='date'
+                defaultValue={todoInfo.date}
+                onChange={event => {
+                  setTodos([
+                    ...todos.slice(0, index),
+                    {title: todos[index].title, done: todos[index].done,
+                      date: event.target.value},
+                    ...todos.slice(index + 1)
+                  ])
+                }}
+                InputLabelProps={{
+                  shrink: true
+                }}
+                InputProps={{
+                  className: todoInfo.done !== true &&
+                              checkDueDate(todoInfo.date) > 0 ?
+                              (checkDueDate(todoInfo.date) > 1 ?
+                                classes.dateOverdue : classes.dateClose) : ''
+                }}
               />
               <Button
                 size='small'
@@ -112,7 +146,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, {title: '', done: false}])
+                setTodos([...todos, {title: '', done: false, date: ''}])
               }}
             >
               Add Todo <AddIcon />
